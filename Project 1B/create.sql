@@ -1,0 +1,77 @@
+
+DROP TABLE IF EXISTS Review;
+DROP TABLE IF EXISTS MovieActor;
+DROP TABLE IF EXISTS MovieDirector;
+DROP TABLE IF EXISTS MovieGenre;
+DROP TABLE IF EXISTS Director;
+DROP TABLE IF EXISTS Actor;
+DROP TABLE IF EXISTS Movie;
+DROP TABLE IF EXISTS MaxPersonID;
+DROP TABLE IF EXISTS MaxMovieID;
+
+
+
+
+
+CREATE table Movie (id int NOT NULL CHECK(id > 0),
+title varchar(100) NOT NULL,
+year int DEFAULT NULL,
+rating varchar(10) CHECK (rating>=0),
+company varchar(50),
+PRIMARY KEY (id))ENGINE=INNODB DEFAULT CHARSET=utf8;
+
+CREATE table Actor (id int NOT NULL CHECK(id > 0),
+last varchar(20) DEFAULT NULL,
+first varchar(20) NOT NULL,
+sex varchar(5) DEFAULT NULL ,
+dob DATE NOT NULL,
+dod DATE,
+PRIMARY KEY (id),
+CHECK (dob<dod),
+UNIQUE(first,last,dob))ENGINE=INNODB DEFAULT CHARSET=utf8;
+
+CREATE table Director (id int NOT NULL CHECK(id > 0),
+last varchar(20) DEFAULT NULL,
+first VARCHAR(20) NOT NULL,
+dob DATE NOT NULL,
+dod DATE,
+PRIMARY KEY (id),
+CHECK (dob<dod),
+UNIQUE(first,last,dob))ENGINE=INNODB DEFAULT CHARSET=utf8;
+
+CREATE table MovieGenre (mid int NOT NULL,
+genre varchar(20) NOT NULL,
+PRIMARY KEY(mid,genre),
+FOREIGN KEY (mid) REFERENCES Movie (id) ON DELETE CASCADE)ENGINE=INNODB DEFAULT CHARSET=utf8;
+
+CREATE table MovieDirector (mid int NOT NULL,
+did int NOT NULL,
+PRIMARY KEY(mid,did),
+FOREIGN KEY(mid) REFERENCES Movie (id) ON DELETE CASCADE,
+FOREIGN KEY(did) REFERENCES Director (id) ON DELETE CASCADE)ENGINE=INNODB DEFAULT CHARSET=utf8;
+
+CREATE table MovieActor (mid int NOT NULL,
+aid int NOT NULL,
+role varchar(50),
+PRIMARY KEY(mid,aid),
+FOREIGN KEY(mid) REFERENCES Movie (id) ON DELETE CASCADE,
+FOREIGN KEY(aid) REFERENCES Actor (id) ON DELETE CASCADE)ENGINE=INNODB DEFAULT CHARSET=utf8;
+
+CREATE table Review(name varchar(20) NOT NULL,
+time TIMESTAMP NOT NULL,
+mid int NOT NULL,
+rating int CHECK (rating>=0),
+comment varchar(250) DEFAULT NULL,
+PRIMARY KEY(name,time,mid),
+FOREIGN KEY(mid) REFERENCES Movie (id) ON DELETE CASCADE)ENGINE=INNODB DEFAULT CHARSET=utf8;
+
+CREATE table MaxPersonID(id int NOT NULL,
+PRIMARY KEY(id))ENGINE=INNODB DEFAULT CHARSET=utf8;
+
+CREATE table MaxMovieID(id int NOT NULL,
+PRIMARY KEY(id))ENGINE=INNODB DEFAULT CHARSET=utf8;
+
+
+
+
+
